@@ -1,0 +1,8 @@
+/* src/components/Game.css */
+.game {
+	font-size: 40px sans-serif;
+	color: blue;
+	text-align: center;
+	align-items: center;
+	justify-content: center;
+}

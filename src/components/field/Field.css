@@ -1,0 +1,16 @@
+.field {
+	display: grid;
+	grid-template-columns: 150px 150px 150px;
+	align-items: center;
+	justify-content: center;
+	background-color: rgb(255, 255, 255);
+  }
+
+
+.cell {
+    width: 150px;
+    height: 150px;
+	font: 40px sans-serif;
+	background-color: rgb(138, 147, 242);
+	border: 2px solid rgb(1, 35, 254);
+}
