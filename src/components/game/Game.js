@@ -1,14 +1,13 @@
-// src/Game.js
 import React, { useState } from 'react';
-import { Field } from '../field/Field';
-import { Information } from '../information/Information';
-import './Game.module.css';
+import GameLayout from './GameLayout';
+import Field from '../field/Field';
+import Information from '../information/Information';
 
 export const Game = () => {
 	const [currentPlayer, setCurrentPlayer] = useState('X');
 	const [isGameEnded, setIsGameEnded] = useState(false);
 	const [isDraw, setIsDraw] = useState(false);
-	const [field, setField] = useState(['', '', '', '', '', '', '', '', '']);
+	const [field, setField] = useState(Array(9).fill(''));
 
 	const handleCellClick = (index) => {
 		if (field[index] || isGameEnded) return;
@@ -17,16 +16,10 @@ export const Game = () => {
 		newField[index] = currentPlayer;
 		setField(newField);
 
-		if (checkWinner(newField)) {
-			setIsGameEnded(true);
-		} else if (newField.every((cell) => cell)) {
-			setIsDraw(true);
-		} else {
-			setCurrentPlayer(currentPlayer === 'X' ? '0' : 'X');
-		}
+		checkGameStatus(newField);
 	};
 
-	const checkWinner = (field) => {
+	const checkGameStatus = (newField) => {
 		const WIN_PATTERNS = [
 			[0, 1, 2],
 			[3, 4, 5],
@@ -37,27 +30,45 @@ export const Game = () => {
 			[0, 4, 8],
 			[2, 4, 6],
 		];
-		return WIN_PATTERNS.some((pattern) =>
-			pattern.every((index) => field[index] === currentPlayer),
-		);
+
+		const isWinner = WIN_PATTERNS.some((pattern) => {
+			const [a, b, c] = pattern;
+			return (
+				newField[a] && newField[a] === newField[b] && newField[a] === newField[c]
+			);
+		});
+
+		if (isWinner) {
+			setIsGameEnded(true);
+			return;
+		}
+
+		if (newField.every((cell) => cell)) {
+			setIsDraw(true);
+			return;
+		}
+
+		setCurrentPlayer(currentPlayer === 'X' ? '0' : 'X');
 	};
 
 	const resetGame = () => {
-		setField(Array(9).fill(''));
 		setCurrentPlayer('X');
 		setIsGameEnded(false);
 		setIsDraw(false);
+		setField(Array(9).fill(''));
 	};
 
+	const statusMessage = isDraw
+		? 'Ничья'
+		: isGameEnded
+			? `Победа: ${currentPlayer}`
+			: `Ходит: ${currentPlayer}`;
+
 	return (
-		<div className="game">
-			<Information
-				currentPlayer={currentPlayer}
-				isGameEnded={isGameEnded}
-				isDraw={isDraw}
-			/>
-			<Field field={field} onCellClick={handleCellClick} />
+		<GameLayout>
+			<Information status={statusMessage} />
+			<Field cells={field} onCellClick={handleCellClick} />
 			<button onClick={resetGame}>Начать заново</button>
-		</div>
+		</GameLayout>
 	);
 };

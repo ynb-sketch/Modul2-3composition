@@ -1,15 +1,8 @@
-// src/Field.js
 import React from 'react';
-import './Field.css';
+import FieldLayout from './FieldLayout';
 
-export const Field = ({ field, onCellClick }) => {
-	return (
-		<div className="field">
-			{field.map((cell, index) => (
-				<button key={index} className="cell" onClick={() => onCellClick(index)}>
-					{cell}
-				</button>
-			))}
-		</div>
-	);
+const Field = ({ cells, onCellClick }) => {
+	return <FieldLayout cells={cells} onCellClick={onCellClick} />;
 };
+
+export default Field;
